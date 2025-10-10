@@ -6,6 +6,10 @@ models:
       group: claims
     columns:
       - name: agency_id
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
   - name: stg_policyholders
   - name: stg_products
   - name: stg_policies
