@@ -1,0 +1,8 @@
+version: 2
+
+groups:
+  - name: claims
+    owner:
+      # Email is required to receive model-level notifications, additional properties are also allowed.
+      name: "claims team"
+      email: katherine.brock+claims@dbtlabs.com
