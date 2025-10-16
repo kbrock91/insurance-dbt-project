@@ -2,15 +2,16 @@ version: 2
 
 models:
   - name: stg_agencies
-    config:
-      group: claims
+    data_tests:
+    - is_valid_channel:
+        config: 
+          severity: warn
+          group: claims
     columns:
       - name: agency_id
-      - name: channel_type
         data_tests:
-          - is_valid_channel:
-              config: 
-                severity: warn
+          - unique
+      - name: channel_type
   - name: stg_policyholders
   - name: stg_products
   - name: stg_policies

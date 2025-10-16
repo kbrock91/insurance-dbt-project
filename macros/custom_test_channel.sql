@@ -1,14 +1,14 @@
-{% test is_valid_channel(model, column_name) %}
+{% test is_valid_channel(model) %}
 
 
 with invalid_channel_types as (
     select
-          {{ column_name }} as channel_type
+           channel_type
     from {{ model }}
-    where  {{ column_name }} != 'Bad-channel'
+    where channel_type != 'Bad-channel'
 )
 
-select {{ column_name }}
+select channel_type
 from invalid_channel_types
 
 {% endtest %}
