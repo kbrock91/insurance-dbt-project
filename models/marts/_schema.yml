@@ -8,10 +8,6 @@ models:
   - name: dim_vehicle
   - name: dim_policy
   - name: fct_claims
-    config:
-      freshness: 
-        build_after:
-          updates_on: all
   - name: fct_premiums
 
 
