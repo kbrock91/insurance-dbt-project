@@ -12,13 +12,3 @@ renamed as (
   from source
 )
 select * from renamed
-
-union all 
-
-select 
-null, 
-null, 
-null, 
-null, 
-null, 
-null
