@@ -8,6 +8,12 @@ models:
   - name: dim_vehicle
   - name: dim_policy
   - name: fct_claims
+    config:
+      freshness: 
+        build_after:  # build this model no more often than every X amount of time, as long as it has new data. Available only on dbt platform Enterprise tiers. 
+          count: 0
+          period: minute
+          updates_on: any  # optional config
   - name: fct_premiums
 
 
