@@ -8,6 +8,33 @@ models:
   - name: dim_vehicle
   - name: dim_policy
   - name: fct_claims
+    columns:
+      - name: claim_id
+        data_tests:
+          - unique
+          - not_null
+      - name: policy_id
+        data_tests:
+          - not_null
+      - name: report_date
+        data_tests:
+          - not_null
+      - name: incident_date
+        data_tests:
+          - not_null
+      - name: claim_status
+        data_tests:
+          - not_null
+      - name: claim_cause
+        data_tests:
+          - not_null
+      - name: loss_amount
+        data_tests:
+          - not_null
+      - name: total_payout_amount
+        data_tests:
+          - not_null
+      - name: outstanding_amount
+        data_tests:
+          - not_null
   - name: fct_premiums
-
-
