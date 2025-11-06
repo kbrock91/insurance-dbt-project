@@ -34,3 +34,13 @@ vars:
   # Optional: restrict reporting window to recent runs
   dbt_pov_model_cost_calculator:
     model_monitor_start_date: '2025-09-23'
+    
+query-comment: "{{ dbt_pov_model_cost_calculator.query_comment(node) }}"
+
+# Hooks that create and populate the tracking tables used for POV analysis.
+on-run-start:
+  - "{{ dbt_pov_model_cost_calculator.create_dbt_project_models_table() }}"
+
+on-run-end:
+  - "{{ dbt_pov_model_cost_calculator.record_dbt_project_models() }}"
+  - "{{ dbt_pov_model_cost_calculator.record_dbt_run_data() }}"
