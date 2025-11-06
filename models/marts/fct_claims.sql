@@ -14,9 +14,9 @@ joined as (
     c.incident_date,
     c.claim_status,
     c.claim_cause,
-    coalesce(p.loss_amount, 0) as loss_amount,
+    coalesce(c.loss_amount, 0) as loss_amount,
     coalesce(p.total_payout_amount, 0) as total_payout_amount,
-     coalesce(p.loss_amount, 0) - coalesce(p.total_payout_amount, 0) as outstanding_amount
+     coalesce(c.loss_amount, 0) - coalesce(p.total_payout_amount, 0) as outstanding_amount
   from claims c
   left join payouts p on c.claim_id = p.claim_id
 )
