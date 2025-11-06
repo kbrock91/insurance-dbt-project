@@ -7,6 +7,27 @@ models:
   - name: stg_policies
   - name: stg_vehicles
   - name: stg_claims
+    columns:
+      - name: claim_id
+        data_tests:
+          - unique
+          - not_null
+      - name: policy_id
+        data_tests:
+          - not_null
+      - name: report_date
+        data_tests:
+          - not_null
+      - name: incident_date
+        data_tests:
+          - not_null
+      - name: claim_status
+        data_tests:
+          - not_null
+      - name: claim_cause
+        data_tests:
+          - not_null
+      - name: loss_amount
+        data_tests:
+          - not_null
   - name: stg_claim_payouts
-
-
