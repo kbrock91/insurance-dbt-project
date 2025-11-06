@@ -19,7 +19,18 @@ models:
       +materialized: view
     marts:
       +materialized: table
+  dbt_pov_model_cost_calculator:
+    +schema: kb_pov_model_cost_calculator
 
 seeds:
   insurance_dbt:
     +quote_columns: false
+
+# ----------------------------------------------
+# dbt-pov-model-cost-calculator configuration
+# ----------------------------------------------
+
+vars:
+  # Optional: restrict reporting window to recent runs
+  dbt_pov_model_cost_calculator:
+    model_monitor_start_date: '2025-09-23'
