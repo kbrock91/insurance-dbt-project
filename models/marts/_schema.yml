@@ -8,12 +8,42 @@ models:
   - name: dim_vehicle
   - name: dim_policy
   - name: fct_claims
+<<<<<<< HEAD
     config:
       freshness: 
         build_after:  # build this model no more often than every X amount of time, as long as it has new data. Available only on dbt platform Enterprise tiers. 
           count: 0
           period: minute
           updates_on: all  # optional config
+=======
+    columns:
+      - name: claim_id
+        data_tests:
+          - unique
+          - not_null
+      - name: policy_id
+        data_tests:
+          - not_null
+      - name: report_date
+        data_tests:
+          - not_null
+      - name: incident_date
+        data_tests:
+          - not_null
+      - name: claim_status
+        data_tests:
+          - not_null
+      - name: claim_cause
+        data_tests:
+          - not_null
+      - name: loss_amount
+        data_tests:
+          - not_null
+      - name: total_payout_amount
+        data_tests:
+          - not_null
+      - name: outstanding_amount
+        data_tests:
+          - not_null
+>>>>>>> 332a6c8570019830d497cde516b2e1be957a359e
   - name: fct_premiums
-
-
