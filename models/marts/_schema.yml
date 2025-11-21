@@ -9,5 +9,3 @@ models:
   - name: dim_policy
   - name: fct_claims
   - name: fct_premiums
-
-

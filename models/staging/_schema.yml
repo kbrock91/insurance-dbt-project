@@ -2,6 +2,16 @@ version: 2
 
 models:
   - name: stg_agencies
+    data_tests:
+    - is_valid_channel:
+        config: 
+          severity: warn
+          group: claims
+    columns:
+      - name: agency_id
+        data_tests:
+          - unique
+      - name: channel_type
   - name: stg_policyholders
   - name: stg_products
   - name: stg_policies
@@ -15,6 +25,26 @@ models:
                 values: ['open', 'closed', 'new', 'under_review','in_progress', 'canceled']
               config:
                 severity: warn
+      - name: claim_id
+        data_tests:
+          - unique
+          - not_null
+      - name: policy_id
+        data_tests:
+          - not_null
+      - name: report_date
+        data_tests:
+          - not_null
+      - name: incident_date
+        data_tests:
+          - not_null
+      - name: claim_status
+        data_tests:
+          - not_null
+      - name: claim_cause
+        data_tests:
+          - not_null
+      - name: loss_amount
+        data_tests:
+          - not_null
   - name: stg_claim_payouts
-
-
