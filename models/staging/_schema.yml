@@ -19,7 +19,7 @@ models:
   - name: stg_claims
     columns:
       - name: claim_status
-        tests:
+        data_tests:
           - accepted_values:
               arguments:
                 values: ['open', 'closed', 'new', 'under_review','in_progress', 'canceled']
@@ -36,9 +36,6 @@ models:
         data_tests:
           - not_null
       - name: incident_date
-        data_tests:
-          - not_null
-      - name: claim_status
         data_tests:
           - not_null
       - name: claim_cause
