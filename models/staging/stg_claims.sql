@@ -12,7 +12,7 @@ typed as (
     initcap(trim(claim_cause)) as claim_cause,
     cast(loss_amount as decimal(18,2)) as loss_amount,
     case
-      when regexp_replace(lower(trim(claim_status)), '[\\s-]+', '_') in ('closed','cancelled') then false
+      when regexp_replace(lower(trim(claim_status)), '[\\s-]+', '_') in ('closed','canceled') then false
       else true
     end as is_open
   from source
