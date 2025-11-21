@@ -10,7 +10,7 @@ with recent_open_claims as (
     total_payout_amount,
     outstanding_amount
   from {{ ref('fct_claims') }}
-  where claim_status = 'open'
+  where is_open = true
     and report_date >= dateadd(day, -30, current_date())
 )
 select * from recent_open_claims
