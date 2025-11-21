@@ -13,6 +13,7 @@ joined as (
     c.report_date,
     c.incident_date,
     c.claim_status,
+    c.is_open,
     c.claim_cause,
     c.loss_amount,
     coalesce(p.total_payout_amount, 0) as total_payout_amount,

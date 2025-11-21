@@ -7,6 +7,14 @@ models:
   - name: stg_policies
   - name: stg_vehicles
   - name: stg_claims
+    columns:
+      - name: claim_status
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['open', 'closed', 'new', 'under_review','in_progress', 'canceled']
+              config:
+                severity: warn
   - name: stg_claim_payouts
 
 
