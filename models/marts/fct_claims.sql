@@ -1,3 +1,10 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='claim_id'
+    )
+}}
+
 with claims as (
   select * from {{ ref('stg_claims') }}
 ),
@@ -21,4 +28,8 @@ joined as (
   left join payouts p on c.claim_id = p.claim_id
 )
 select * from joined
+{% if is_incremental() %}
+    -- this filter will only be applied on an incremental run
+    where report_date > (select max(report_date) from {{ this }}) 
+{% endif %}
 
