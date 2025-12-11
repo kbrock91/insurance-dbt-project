@@ -7,6 +7,8 @@ models:
   - name: stg_policies
   - name: stg_vehicles
   - name: stg_claims
+    config:
+      group: FusionNotifs
     columns:
       - name: claim_id
         data_tests:
