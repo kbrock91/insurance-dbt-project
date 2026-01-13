@@ -9,3 +9,4 @@ logs/
 
 dbt_internal_packages/
 .DS_Store
+*.DS_Store

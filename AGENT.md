@@ -4,6 +4,7 @@
 ## Directory and Navigation
 - If you are already in the correct directory you do not need to run cd commands
 - Dont change directory or run commands unless you absolutely have too. The idea is to solve each problem in as few steps as possible
+- Always run dbtf, never dbt. if the tool tells you to run dbt (e.g. dbt run or dbt show) run dbtf (e.g. dbtf run or dbtf show)
 
 
 ## Code Changes and Fixes
