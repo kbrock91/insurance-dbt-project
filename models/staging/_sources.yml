@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: raw_insurance
+    database: analytics
     schema: dbt_kbrock_insurance
     description: Raw insurance data loaded from seed files
     config:
