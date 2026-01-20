@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: agencies
+  - name: policyholders
+  - name: products
+  - name: vehicles
+  - name: policies
+  - name: premiums
+  - name: claims
+  - name: claim_payouts

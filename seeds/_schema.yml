@@ -1,7 +1,7 @@
 version: 2
 
 seeds:
-  - name: agencies
+  - name: seed_agencies
     description: Master list of insurance agencies.
     columns:
       - name: agency_key
@@ -17,7 +17,7 @@ seeds:
       - name: channel_type
         description: Sales channel classification (e.g., Direct, Broker).
 
-  - name: policyholders
+  - name: seed_policyholders
     description: Individual customers who hold insurance policies.
     columns:
       - name: policyholder_key
@@ -43,7 +43,7 @@ seeds:
       - name: zip
         description: Postal code.
 
-  - name: products
+  - name: seed_products
     description: Insurance product catalog.
     columns:
       - name: product_key
@@ -53,7 +53,7 @@ seeds:
       - name: coverage_type
         description: Coverage category (e.g., Liability, Comprehensive).
 
-  - name: vehicles
+  - name: seed_vehicles
     description: Vehicles covered by policies.
     columns:
       - name: vehicle_key
@@ -67,7 +67,7 @@ seeds:
       - name: vehicle_type
         description: Body type/classification.
 
-  - name: policies
+  - name: seed_policies
     description: Policies tying policyholders, agencies, products, and vehicles.
     columns:
       - name: policy_id
@@ -89,7 +89,7 @@ seeds:
       - name: policy_status
         description: Policy lifecycle status (e.g., active, expired).
 
-  - name: premiums
+  - name: seed_premiums
     description: Premium transactions by policy and effective date.
     columns:
       - name: policy_key
@@ -105,7 +105,7 @@ seeds:
       - name: net_premium_amount
         description: Net premium after fees and discounts.
 
-  - name: claims
+  - name: seed_claims
     description: Reported claims against policies.
     columns:
       - name: claim_key
@@ -123,7 +123,7 @@ seeds:
       - name: loss_amount
         description: Reported loss amount.
 
-  - name: claim_payouts
+  - name: seed_claim_payouts
     description: Payments made for claims.
     columns:
       - name: claim_key

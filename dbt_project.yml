@@ -19,6 +19,9 @@ models:
       +materialized: view
     marts:
       +materialized: table
+    synthetic:
+      +materialized: table
+      +schema: dbt_kbrock_insurance
 
 seeds:
   insurance_dbt:
