@@ -22,7 +22,6 @@ models:
     synthetic:
       +enabled: false
       +materialized: table
-      +schema: dbt_kbrock_insurance
 
 seeds:
   insurance_dbt:
