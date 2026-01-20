@@ -1,5 +1,5 @@
 with source as (
-  select * from {{ ref('claim_payouts') }}
+  select * from {{ source('raw_insurance', 'claim_payouts') }}
 ),
 typed as (
   select

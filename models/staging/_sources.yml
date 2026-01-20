@@ -1,0 +1,31 @@
+version: 2
+
+sources:
+  - name: raw_insurance
+    schema: dbt_kbrock_insurance
+    description: Raw insurance data loaded from seed files
+    config:
+      freshness:
+        warn_after:
+          count: 4
+          period: hour
+        error_after:
+          count: 6
+          period: hour
+    tables:
+      - name: agencies
+        description: Master list of insurance agencies.
+      - name: claim_payouts
+        description: Payments made for claims.
+      - name: claims
+        description: Reported claims against policies.
+      - name: policies
+        description: Policies tying policyholders, agencies, products, and vehicles.
+      - name: policyholders
+        description: Individual customers who hold insurance policies.
+      - name: premiums
+        description: Premium transactions by policy and effective date.
+      - name: products
+        description: Insurance product catalog.
+      - name: vehicles
+        description: Vehicles covered by policies.
