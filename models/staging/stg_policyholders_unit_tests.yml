@@ -4,7 +4,7 @@ unit_tests:
   - name: stg_policyholders_phone_format
     model: stg_policyholders
     given:
-      - input: ref('policyholders')
+      - input: source('raw_insurance', 'policyholders')
         rows:
           - phone: '206-777-1212'
           - phone: '(312)555.9988'
