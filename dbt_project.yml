@@ -20,6 +20,7 @@ models:
     marts:
       +materialized: table
     synthetic:
+      +enabled: false
       +materialized: table
       +schema: dbt_kbrock_insurance
 
