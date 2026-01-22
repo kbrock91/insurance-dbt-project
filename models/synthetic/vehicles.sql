@@ -34,7 +34,7 @@ select
         lpad(mod(rg.row_num, 100000000)::varchar, 8, '0') ||
         chr(65 + mod(rg.row_num * 11, 26)) ||
         lpad(mod(rg.row_num * 13, 100000)::varchar, 5, '0')
-    ) as vehicle_key,
+    ) as vehicle_vin,
     mk.make,
     md.model,
     2010 + mod(rg.row_num, 15) as year,

@@ -2,7 +2,7 @@ name: "insurance_dbt"
 version: "1.0.0"
 config-version: 2
 
-profile: "insurance_dbt"
+profile: "insurance_dbt_zna"
 
 model-paths: ["models"]
 seed-paths: ["seeds"]
@@ -26,3 +26,9 @@ models:
 seeds:
   insurance_dbt:
     +quote_columns: false
+
+sources:
+  +freshness:
+    warn_after:
+      count: 9999
+      period: day
