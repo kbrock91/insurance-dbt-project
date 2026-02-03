@@ -7,6 +7,8 @@ sources:
     description: Raw insurance data loaded from seed files
 
     tables:
+      - name: adjusters
+        description: Insurance claim adjusters who investigate and process claims.
       - name: agencies
         description: Master list of insurance agencies.
       - name: claim_payouts
