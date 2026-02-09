@@ -1,11 +1,11 @@
+
 with source as (
   select * from {{ source('raw_insurance', 'products') }}
 ),
 renamed as (
   select
-    cast(product_key as varchar) as product_id,
-    trim(name) as product_name,
-    trim(coverage_type) as coverage_type
+    -- Using ILIKE pattern that matches no columns to trigger error 001080
+    * ILIKE '%nonexistent_column_pattern%'
   from source
 )
 select * from renamed

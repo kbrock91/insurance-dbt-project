@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: policyholder_risk_scores
+    description: >
+      Calculates risk scores for policyholders based on their claims history.
+      Risk scores range from 0-100, with higher scores indicating higher risk
+      based on claim frequency and total loss amounts.
+    columns:
+      - name: policyholder_id
+        description: Unique identifier for the policyholder
+        data_tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: Policyholder's first name
+      - name: last_name
+        description: Policyholder's last name
+      - name: total_claims
+        description: Total number of claims filed by this policyholder
+      - name: total_loss_amount
+        description: Sum of all loss amounts from claims
+      - name: avg_loss_amount
+        description: Average loss amount per claim
+      - name: risk_score
+        description: >
+          Calculated risk score from 0-100. Higher values indicate higher risk
+          based on claim frequency and total losses.

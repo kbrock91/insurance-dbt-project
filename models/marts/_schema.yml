@@ -7,5 +7,55 @@ models:
   - name: dim_product
   - name: dim_vehicle
   - name: dim_policy
+
   - name: fct_claims
+    semantic_model:
+      enabled: true
+    agg_time_dimension: report_date
+    columns:
+      - name: claim_id
+        entity:
+          type: primary
+          name: claim
+      - name: policy_id
+        entity:
+          type: foreign
+          name: policy
+      - name: report_date
+        granularity: day
+        dimension:
+          type: time
+      - name: claim_status
+        dimension:
+          type: categorical
+      - name: claim_cause
+        dimension:
+          type: categorical
+    metrics:
+      - name: claim_count
+        type: simple
+        agg: count_distinct
+        expr: claim_id
+      - name: total_loss_amount
+        type: simple
+        agg: sum
+        expr: loss_amount
+
   - name: fct_premiums
+    semantic_model:
+      enabled: true
+    agg_time_dimension: effective_date
+    columns:
+      - name: policy_id
+        entity:
+          type: foreign
+          name: policy
+      - name: effective_date
+        granularity: day
+        dimension:
+          type: time
+    metrics:
+      - name: total_net_premium
+        type: simple
+        agg: sum
+        expr: net_premium_amount

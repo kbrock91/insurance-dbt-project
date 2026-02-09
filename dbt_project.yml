@@ -16,8 +16,11 @@ models:
       relation: true
       columns: true
     staging:
-      +materialized: view
+      +materialized: table
+      Schema: STG_INSURANCE
     marts:
+      +materialized: table
+    python-models:
       +materialized: table
     synthetic:
       +enabled: false

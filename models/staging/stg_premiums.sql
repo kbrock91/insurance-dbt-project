@@ -8,7 +8,8 @@ typed as (
     cast(gross_premium_amount as decimal(18,2)) as gross_premium_amount,
     cast(fees as decimal(18,2)) as fees,
     cast(discounts as decimal(18,2)) as discounts,
-    cast(net_premium_amount as decimal(18,2)) as net_premium_amount
+    cast(net_premium_amount as decimal(18,2)) as net_premium_amount,
+    cast('{{ run_started_at }}' as timestamp) as _dbt_run_started_at
   from source
 )
 select * from typed

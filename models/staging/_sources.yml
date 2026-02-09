@@ -25,3 +25,5 @@ sources:
         description: Insurance product catalog.
       - name: vehicles
         description: Vehicles covered by policies.
+      - name: underwriting_decisions
+        description: Underwriting decision records for policy applications (table does not exist in remote).
