@@ -1,0 +1,80 @@
+semantic_models:
+  - name: claims
+    model: ref('fct_claims')
+    defaults:
+      agg_time_dimension: report_date
+    entities:
+      - name: claim
+        type: primary
+        expr: claim_id
+      - name: policy
+        type: foreign
+        expr: policy_id
+    dimensions:
+      - name: report_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: claim_status
+        type: categorical
+      - name: claim_cause
+        type: categorical
+    measures:
+      - name: claim_count
+        agg: count
+        expr: claim_id
+      - name: total_loss_amount
+        agg: sum
+        expr: loss_amount
+
+  - name: premiums
+    model: ref('fct_premiums')
+    defaults:
+      agg_time_dimension: effective_date
+    entities:
+      - name: premium
+        type: primary
+        expr: policy_id || '-' || effective_date
+      - name: policy
+        type: foreign
+        expr: policy_id
+    dimensions:
+      - name: effective_date
+        type: time
+        type_params:
+          time_granularity: day
+    measures:
+      - name: total_net_premium
+        agg: sum
+        expr: net_premium_amount
+      - name: total_gross_premium
+        agg: sum
+        expr: gross_premium_amount
+
+metrics:
+  - name: claim_count
+    label: Claim Count
+    type: simple
+    type_params:
+      measure: claim_count
+
+  - name: total_loss_amount
+    label: Total Loss Amount
+    type: simple
+    type_params:
+      measure: total_loss_amount
+
+  - name: total_net_premium
+    label: Total Net Premium
+    type: simple
+    type_params:
+      measure: total_net_premium
+
+  - name: loss_ratio
+    label: Loss Ratio
+    type: derived
+    type_params:
+      expr: total_loss_amount / total_net_premium
+      metrics:
+        - name: total_loss_amount
+        - name: total_net_premium
