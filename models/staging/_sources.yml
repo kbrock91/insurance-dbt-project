@@ -25,6 +25,8 @@ sources:
         description: Insurance product catalog.
       - name: vehicles
         description: Vehicles covered by policies.
+      - name: claim_adjustments
+        description: Claim Adjustments records
       - name: underwriting_decisions
         description: Underwriting decision records for policy applications.
       - name: claim_notes

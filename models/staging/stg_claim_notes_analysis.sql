@@ -16,7 +16,6 @@ analyzed_notes as (
         note_date,
         adjuster_notes,
         note_type,
-        SNOWFLAKE.CORTEX.COUNT_TOKENS(adjuster_notes, 'llama3-70b') as token_count,
         SNOWFLAKE.CORTEX.SENTIMENT(adjuster_notes) as note_sentiment
     from claim_notes
 )
