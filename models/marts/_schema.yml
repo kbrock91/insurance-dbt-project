@@ -1,6 +1,14 @@
 version: 2
 
 models:
+  - name: metricflow_time_spine
+    description: Time spine table for MetricFlow semantic layer
+    time_spine:
+      standard_granularity_column: date_day
+    columns:
+      - name: date_day
+        granularity: day
+
   - name: dim_date
   - name: dim_agency
   - name: dim_policyholder
