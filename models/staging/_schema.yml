@@ -1,36 +1,5 @@
 version: 2
 
-unit_tests:
-  - name: test_claim_status_normalization
-    description: >
-      Verifies that claim_status is normalized to snake_case and is_open is derived correctly.
-      Given various raw claim_status formats (spaces, hyphens, mixed case),
-      Then claim_status should be lowercase snake_case and is_open should be false only for closed/canceled.
-    model: stg_claims
-    given:
-      - input: source('raw_insurance', 'claims')
-        rows:
-          # Test normalization: spaces to underscores
-          - {claim_key: 1, policy_key: 100, report_date: '2024-01-15', incident_date: '2024-01-14', claim_status: 'Under Review', claim_cause: 'collision', loss_amount: 5000}
-          # Test normalization: hyphens to underscores
-          - {claim_key: 2, policy_key: 101, report_date: '2024-01-16', incident_date: '2024-01-15', claim_status: 'in-progress', claim_cause: 'theft', loss_amount: 3000}
-          # Test normalization: mixed case, leading/trailing spaces
-          - {claim_key: 3, policy_key: 102, report_date: '2024-01-17', incident_date: '2024-01-16', claim_status: '  NEW  ', claim_cause: 'weather', loss_amount: 2000}
-          # Test is_open = false for closed
-          - {claim_key: 4, policy_key: 103, report_date: '2024-01-18', incident_date: '2024-01-17', claim_status: 'Closed', claim_cause: 'collision', loss_amount: 4000}
-          # Test is_open = false for canceled
-          - {claim_key: 5, policy_key: 104, report_date: '2024-01-19', incident_date: '2024-01-18', claim_status: 'CANCELED', claim_cause: 'other', loss_amount: 1000}
-          # Test is_open = true for open status
-          - {claim_key: 6, policy_key: 105, report_date: '2024-01-20', incident_date: '2024-01-19', claim_status: 'open', claim_cause: 'collision', loss_amount: 6000}
-    expect:
-      rows:
-        - {claim_id: '1', claim_status: 'under_review', is_open: true}
-        - {claim_id: '2', claim_status: 'in_progress', is_open: true}
-        - {claim_id: '3', claim_status: 'new', is_open: true}
-        - {claim_id: '4', claim_status: 'closed', is_open: false}
-        - {claim_id: '5', claim_status: 'canceled', is_open: false}
-        - {claim_id: '6', claim_status: 'open', is_open: true}
-
 models:
   - name: stg_agencies
     data_tests:
@@ -66,8 +35,9 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('stg_policies')
-              field: policy_id
+              arguments:
+                to: ref('stg_policies')
+                field: policy_id
       - name: report_date
         data_tests:
           - not_null

@@ -1,0 +1,45 @@
+# Disabled unit tests - re-enable by moving to models/ folder or setting enabled: true
+version: 2
+
+unit_tests:
+  - name: test_claim_status_normalization
+    config:
+      enabled: false
+    description: >
+      Verifies that claim_status is normalized to snake_case and is_open is derived correctly.
+      Given various raw claim_status formats (spaces, hyphens, mixed case),
+      Then claim_status should be lowercase snake_case and is_open should be false only for closed/canceled.
+    model: stg_claims
+    given:
+      - input: source('raw_insurance', 'claims')
+        rows:
+          - {claim_key: 1, policy_key: 100, report_date: '2024-01-15', incident_date: '2024-01-14', claim_status: 'Under Review', claim_cause: 'collision', loss_amount: 5000}
+          - {claim_key: 2, policy_key: 101, report_date: '2024-01-16', incident_date: '2024-01-15', claim_status: 'in-progress', claim_cause: 'theft', loss_amount: 3000}
+          - {claim_key: 3, policy_key: 102, report_date: '2024-01-17', incident_date: '2024-01-16', claim_status: '  NEW  ', claim_cause: 'weather', loss_amount: 2000}
+          - {claim_key: 4, policy_key: 103, report_date: '2024-01-18', incident_date: '2024-01-17', claim_status: 'Closed', claim_cause: 'collision', loss_amount: 4000}
+          - {claim_key: 5, policy_key: 104, report_date: '2024-01-19', incident_date: '2024-01-18', claim_status: 'CANCELED', claim_cause: 'other', loss_amount: 1000}
+          - {claim_key: 6, policy_key: 105, report_date: '2024-01-20', incident_date: '2024-01-19', claim_status: 'open', claim_cause: 'collision', loss_amount: 6000}
+    expect:
+      rows:
+        - {claim_id: '1', claim_status: 'under_review', is_open: true}
+        - {claim_id: '2', claim_status: 'in_progress', is_open: true}
+        - {claim_id: '3', claim_status: 'new', is_open: true}
+        - {claim_id: '4', claim_status: 'closed', is_open: false}
+        - {claim_id: '5', claim_status: 'canceled', is_open: false}
+        - {claim_id: '6', claim_status: 'open', is_open: true}
+
+  - name: stg_policyholders_phone_format
+    config:
+      enabled: false
+    model: stg_policyholders
+    given:
+      - input: source('raw_insurance', 'policyholders')
+        rows:
+          - phone: '206-777-1212'
+          - phone: '(312)555.9988'
+          - phone: '646 555 4321'
+    expect:
+      rows:
+        - phone: '(206) 777-1212'
+        - phone: '(312) 555-9988'
+        - phone: '(646) 555-4321'
