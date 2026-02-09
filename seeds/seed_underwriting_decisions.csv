@@ -1,0 +1,11 @@
+decision_id,application_id,policy_id,underwriter_id,decision_date,decision_outcome,risk_score,premium_adjustment_pct,decline_reason,notes
+1,APP001,1,UW001,2023-01-15,APPROVED,72,0.00,,Standard risk profile
+2,APP002,2,UW001,2023-01-18,APPROVED,65,-5.00,,Low risk - good driving record
+3,APP003,3,UW002,2023-02-01,APPROVED,78,10.00,,Minor risk factors identified
+4,APP004,,UW001,2023-02-10,DECLINED,92,,High risk area,Multiple prior claims in household
+5,APP005,5,UW003,2023-02-15,APPROVED,70,0.00,,Standard approval
+6,APP006,,UW002,2023-03-01,DECLINED,88,,Vehicle age,Vehicle exceeds age limit for comprehensive
+7,APP007,7,UW001,2023-03-05,APPROVED,55,-10.00,,Excellent risk profile
+8,APP008,8,UW003,2023-03-12,REFERRED,81,,,Requires manager review - borderline risk
+9,APP009,9,UW002,2023-03-20,APPROVED,75,5.00,,Minor premium adjustment
+10,APP010,10,UW001,2023-04-01,APPROVED,68,0.00,,Standard risk
