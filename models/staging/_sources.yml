@@ -5,7 +5,9 @@ sources:
     database: analytics
     schema: dbt_kbrock_insurance
     description: Raw insurance data loaded from seed files
-
+    config:
+      freshness:
+        warn_after: {count: 1, period: day}
     tables:
       - name: agencies
         description: Master list of insurance agencies.
