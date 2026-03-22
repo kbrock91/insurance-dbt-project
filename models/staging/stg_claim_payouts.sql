@@ -6,7 +6,7 @@ typed as (
     cast(claim_key as varchar) as claim_id,
     cast(payout_key as varchar) as payout_id,
     cast(payout_date as date) as payout_date,
-    cast(payout_amount as decimal(18,2)) * 1.3 as payout_amount,
+    cast(payout_amount as decimal(18,2)) * 1.2 as payout_amount,
     initcap(trim(payout_type)) as payout_type
   from source
 )
