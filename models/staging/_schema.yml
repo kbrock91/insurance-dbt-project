@@ -6,7 +6,6 @@ models:
     - is_valid_channel:
         config: 
           severity: warn
-          group: claims
     columns:
       - name: agency_id
         data_tests:
@@ -17,6 +16,8 @@ models:
   - name: stg_policies
   - name: stg_vehicles
   - name: stg_claims
+    config:
+      group: claims
     columns:
       - name: claim_status
         data_tests:
