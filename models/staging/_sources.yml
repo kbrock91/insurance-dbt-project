@@ -7,7 +7,7 @@ sources:
     description: Raw insurance data loaded from seed files
     config:
       freshness:
-        warn_after: {count: 1, period: day}
+        warn_after: {count: 1, period: hour}
     tables:
       - name: agencies
         description: Master list of insurance agencies.
