@@ -2,10 +2,205 @@ version: 2
 
 models:
   - name: dim_date
+    description: Date dimension covering 2020-01-01 through 2025-12-31. Used to join time-based facts to a standard calendar spine.
+    columns:
+      - name: date_day
+        description: A single calendar date. Primary key of this dimension.
+        tests:
+          - unique
+          - not_null
+
   - name: dim_agency
+    description: One row per insurance agency. Represents the distribution channel through which policies are sold.
+    columns:
+      - name: agency_id
+        description: Unique identifier for the agency. Primary key.
+        tests:
+          - unique
+          - not_null
+      - name: agency_name
+        description: The display name of the agency.
+        tests:
+          - not_null
+      - name: region
+        description: Geographic region the agency operates in.
+        tests:
+          - not_null
+      - name: email
+        description: Primary contact email address for the agency.
+      - name: phone
+        description: Primary contact phone number for the agency.
+      - name: channel_type
+        description: The distribution channel type for the agency (e.g. direct, broker, digital).
+
   - name: dim_policyholder
+    description: One row per policyholder. Represents the individual customers who hold insurance policies.
+    columns:
+      - name: policyholder_id
+        description: Unique identifier for the policyholder. Primary key.
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: Policyholder's first name.
+        tests:
+          - not_null
+      - name: last_name
+        description: Policyholder's last name.
+        tests:
+          - not_null
+      - name: date_of_birth
+        description: Policyholder's date of birth.
+      - name: gender
+        description: Policyholder's gender.
+      - name: address
+        description: Street address of the policyholder.
+      - name: city
+        description: City of the policyholder's address.
+      - name: state
+        description: State of the policyholder's address.
+      - name: zip
+        description: ZIP code of the policyholder's address.
+
   - name: dim_product
+    description: One row per insurance product. Represents the catalog of insurance products that can be attached to a policy.
+    columns:
+      - name: product_id
+        description: Unique identifier for the product. Primary key.
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: Display name of the insurance product.
+        tests:
+          - not_null
+      - name: coverage_type
+        description: The type of coverage the product provides (e.g. liability, comprehensive, collision).
+        tests:
+          - not_null
+
   - name: dim_vehicle
+    description: One row per vehicle covered under a policy. Identified by VIN.
+    columns:
+      - name: vehicle_vin
+        description: Vehicle Identification Number. Primary key.
+        tests:
+          - unique
+          - not_null
+      - name: make
+        description: Manufacturer of the vehicle (e.g. Toyota, Ford).
+        tests:
+          - not_null
+      - name: model
+        description: Model name of the vehicle (e.g. Camry, F-150).
+        tests:
+          - not_null
+      - name: year
+        description: Model year of the vehicle.
+        tests:
+          - not_null
+      - name: vehicle_type
+        description: Body style classification of the vehicle (e.g. Sedan, SUV, Truck, Coupe, Hatchback).
+
   - name: dim_policy
+    description: One row per insurance policy. Links policyholders, agencies, products, and vehicles together with policy terms and status.
+    columns:
+      - name: policy_id
+        description: Unique surrogate identifier for the policy. Primary key.
+        tests:
+          - unique
+          - not_null
+      - name: policy_number
+        description: Business-facing unique policy number.
+        tests:
+          - unique
+          - not_null
+      - name: policyholder_id
+        description: Foreign key to dim_policyholder.
+        tests:
+          - not_null
+      - name: agency_id
+        description: Foreign key to dim_agency. Identifies the agency that sold the policy.
+        tests:
+          - not_null
+      - name: product_id
+        description: Foreign key to dim_product. Identifies the insurance product on the policy.
+        tests:
+          - not_null
+      - name: vehicle_vin
+        description: Foreign key to dim_vehicle. Identifies the vehicle covered by the policy.
+        tests:
+          - not_null
+      - name: start_date
+        description: Date the policy coverage begins.
+        tests:
+          - not_null
+      - name: end_date
+        description: Date the policy coverage ends. Null if the policy has no fixed end date.
+      - name: policy_status
+        description: Current status of the policy (e.g. active, expired, cancelled).
+        tests:
+          - not_null
+
   - name: fct_claims
+    description: One row per insurance claim. Contains claim financials and status, joined to policies.
+    columns:
+      - name: claim_id
+        description: Unique identifier for the claim. Primary key.
+        tests:
+          - unique
+          - not_null
+      - name: policy_id
+        description: Foreign key to dim_policy. Identifies the policy the claim was filed against.
+        tests:
+          - not_null
+      - name: report_date
+        description: Date the claim was reported.
+        tests:
+          - not_null
+      - name: incident_date
+        description: Date the incident that triggered the claim occurred.
+        tests:
+          - not_null
+      - name: claim_status
+        description: Current status of the claim (e.g. new, open, under_review, in_progress, closed, canceled, cancelled).
+        tests:
+          - not_null
+      - name: is_open
+        description: Boolean flag used to identify whether a claim is open or closed. True if the claim is still active, false if resolved.
+      - name: claim_cause
+        description: The cause or category of the claim (e.g. collision, theft, weather).
+        tests:
+          - not_null
+      - name: loss_amount
+        description: The total dollar amount of the loss reported on the claim.
+        tests:
+          - not_null
+      - name: total_payout_amount
+        description: The total amount paid out against the claim across all payout transactions.
+      - name: outstanding_amount
+        description: The remaining unpaid balance on the claim, calculated as loss_amount minus total_payout_amount.
+
   - name: fct_premiums
+    description: One row per premium transaction per policy. Contains gross and net premium amounts with fees and discounts applied.
+    columns:
+      - name: policy_id
+        description: Foreign key to dim_policy. Identifies the policy this premium transaction belongs to.
+        tests:
+          - not_null
+      - name: effective_date
+        description: The date this premium transaction takes effect.
+        tests:
+          - not_null
+      - name: gross_premium_amount
+        description: The full premium amount before fees and discounts are applied.
+        tests:
+          - not_null
+      - name: fees
+        description: Additional fees added on top of the base premium.
+      - name: discounts
+        description: Discount amounts applied to reduce the gross premium.
+      - name: net_premium_amount
+        description: The final premium amount after fees and discounts have been applied.
+        tests:
+          - not_null

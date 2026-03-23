@@ -27,7 +27,7 @@ models:
               config:
                 severity: warn
                 meta: 
-                  error_message: "Claim status must be one of the following: open, closed, new, under_review, in_progress, canceled, cancelled"
+                  error_message: "Claim status must be one of the following: open, closed, new, under_review, in_progress, canceled"
       - name: claim_id
         data_tests:
           - unique
