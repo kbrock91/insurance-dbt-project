@@ -5,7 +5,7 @@
 - If you are already in the correct directory you do not need to run cd commands
 - Dont change directory or run commands unless you absolutely have too. The idea is to solve each problem in as few steps as possible
 - Always run dbtf, never dbt. if the tool tells you to run dbt (e.g. dbt run or dbt show) run dbtf (e.g. dbtf run or dbtf show)
-
+- if a user asks about upstream/downstream references or lineage for models or columns, always attempt to use the dbt MCP tool get_lineage or get_column_lineage tool. Do not attempt to parse out the ref() or source() function directly or just look at model details, as this does not take advantage of the dbt DAG. Use the lineage tools only.
 
 ## Code Changes and Fixes
 - Make minimal changes only. Don't browse unnecessary files. Make sure the changes makes sense coneptually. Don't check target/compiled unless asked for it.

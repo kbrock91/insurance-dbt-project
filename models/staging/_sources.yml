@@ -6,6 +6,10 @@ sources:
     schema: dbt_kbrock_insurance
     description: Raw insurance data loaded from seed files
 
+    config:
+      freshness:
+        warn_after: {count: 1, period: day}
+
     tables:
       - name: adjusters
         description: Insurance claim adjusters who investigate and process claims.

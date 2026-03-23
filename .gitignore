@@ -3,6 +3,10 @@ target/
 dbt_packages/
 logs/
 .venv/
+venv/
+project_review/.venv/
+project_review/.env
+.env
 *.duckdb
 *.duckdb.wal
 

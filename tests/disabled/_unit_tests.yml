@@ -28,18 +28,3 @@ unit_tests:
         - {claim_id: '5', claim_status: 'canceled', is_open: false}
         - {claim_id: '6', claim_status: 'open', is_open: true}
 
-  - name: stg_policyholders_phone_format
-    config:
-      enabled: false
-    model: stg_policyholders
-    given:
-      - input: source('raw_insurance', 'policyholders')
-        rows:
-          - phone: '206-777-1212'
-          - phone: '(312)555.9988'
-          - phone: '646 555 4321'
-    expect:
-      rows:
-        - phone: '(206) 777-1212'
-        - phone: '(312) 555-9988'
-        - phone: '(646) 555-4321'

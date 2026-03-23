@@ -17,14 +17,15 @@ models:
       columns: true
     staging:
       +materialized: table
-      Schema: STG_INSURANCE
     marts:
       +materialized: table
     python-models:
       +materialized: table
     synthetic:
-      +enabled: false
+      +enabled: true
       +materialized: table
+
+
 
 seeds:
   insurance_dbt:
@@ -35,3 +36,5 @@ sources:
     warn_after:
       count: 9999
       period: day
+flags:
+  require_generic_test_arguments_property: true

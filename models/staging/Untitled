@@ -1,0 +1,362 @@
+with a as (
+            select 
+                "CLAIM_ID", "POLICY_ID", "REPORT_DATE", "INCIDENT_DATE", "CLAIM_STATUS", "CLAIM_CAUSE", "LOSS_AMOUNT", "IS_OPEN",
+                md5(cast(coalesce(cast("claim_id" as TEXT), '_dbt_dbt_compare_macros_surrogate_key_null_') as TEXT)) as dbt_audit_surrogate_key
+            from (select * from ANALYTICS_KB_SAO.kb_staging_insurance.stg_claims) as a_subq
+            
+    
+
+        ),
+        b as (
+            select 
+                "CLAIM_ID", "POLICY_ID", "REPORT_DATE", "INCIDENT_DATE", "CLAIM_STATUS", "CLAIM_CAUSE", "LOSS_AMOUNT", "IS_OPEN",
+                md5(cast(coalesce(cast("claim_id" as TEXT), '_dbt_dbt_compare_macros_surrogate_key_null_') as TEXT)) as dbt_audit_surrogate_key
+            from (select * from ANALYTICS_KB_SAO.dbt_cloud_pr_70403104384044_13.stg_claims) as b_subq
+            
+    
+
+        ),
+
+        calculated as (
+            select 
+                
+                    
+                    
+                
+                boolor_agg(
+                        (
+                            (a."CLAIM_ID" != b."CLAIM_ID")
+                            or (a."CLAIM_ID" is null and b."CLAIM_ID" is not null)
+                            or (a."CLAIM_ID" is not null and b."CLAIM_ID" is null)
+                        )
+                    ) as claim_id_has_difference, 
+                
+                    
+                    
+                
+                boolor_agg(
+                        (
+                            (a."POLICY_ID" != b."POLICY_ID")
+                            or (a."POLICY_ID" is null and b."POLICY_ID" is not null)
+                            or (a."POLICY_ID" is not null and b."POLICY_ID" is null)
+                        )
+                    ) as policy_id_has_difference, 
+                
+                    
+                    
+                
+                boolor_agg(
+                        (
+                            (a."REPORT_DATE" != b."REPORT_DATE")
+                            or (a."REPORT_DATE" is null and b."REPORT_DATE" is not null)
+                            or (a."REPORT_DATE" is not null and b."REPORT_DATE" is null)
+                        )
+                    ) as report_date_has_difference, 
+                
+                    
+                    
+                
+                boolor_agg(
+                        (
+                            (a."INCIDENT_DATE" != b."INCIDENT_DATE")
+                            or (a."INCIDENT_DATE" is null and b."INCIDENT_DATE" is not null)
+                            or (a."INCIDENT_DATE" is not null and b."INCIDENT_DATE" is null)
+                        )
+                    ) as incident_date_has_difference, 
+                
+                    
+                    
+                
+                boolor_agg(
+                        (
+                            (a."CLAIM_STATUS" != b."CLAIM_STATUS")
+                            or (a."CLAIM_STATUS" is null and b."CLAIM_STATUS" is not null)
+                            or (a."CLAIM_STATUS" is not null and b."CLAIM_STATUS" is null)
+                        )
+                    ) as claim_status_has_difference, 
+                
+                    
+                    
+                
+                boolor_agg(
+                        (
+                            (a."CLAIM_CAUSE" != b."CLAIM_CAUSE")
+                            or (a."CLAIM_CAUSE" is null and b."CLAIM_CAUSE" is not null)
+                            or (a."CLAIM_CAUSE" is not null and b."CLAIM_CAUSE" is null)
+                        )
+                    ) as claim_cause_has_difference, 
+                
+                    
+                    
+                
+                boolor_agg(
+                        (
+                            (a."LOSS_AMOUNT" != b."LOSS_AMOUNT")
+                            or (a."LOSS_AMOUNT" is null and b."LOSS_AMOUNT" is not null)
+                            or (a."LOSS_AMOUNT" is not null and b."LOSS_AMOUNT" is null)
+                        )
+                    ) as loss_amount_has_difference, 
+                
+                    
+                    
+                
+                boolor_agg(
+                        (
+                            (a."IS_OPEN" != b."IS_OPEN")
+                            or (a."IS_OPEN" is null and b."IS_OPEN" is not null)
+                            or (a."IS_OPEN" is not null and b."IS_OPEN" is null)
+                        )
+                    ) as is_open_has_difference
+                
+            from a
+            inner join b on a.dbt_audit_surrogate_key = b.dbt_audit_surrogate_key
+        )
+
+    
+    
+    select 
+        'CLAIM_ID' as column_name, 
+        claim_id_has_difference as has_difference
+    
+    from calculated
+
+    
+        
+    union all 
+
+    
+
+    
+    
+    select 
+        'POLICY_ID' as column_name, 
+        policy_id_has_difference as has_difference
+    
+    from calculated
+
+    
+        
+    union all 
+
+    
+
+    
+    
+    select 
+        'REPORT_DATE' as column_name, 
+        report_date_has_difference as has_difference
+    
+    from calculated
+
+    
+        
+    union all 
+
+    
+
+    
+    
+    select 
+        'INCIDENT_DATE' as column_name, 
+        incident_date_has_difference as has_difference
+    
+    from calculated
+
+    
+        
+    union all 
+
+    
+
+    
+    
+    select 
+        'CLAIM_STATUS' as column_name, 
+        claim_status_has_difference as has_difference
+    
+    from calculated
+
+    
+        
+    union all 
+
+    
+
+    
+    
+    select 
+        'CLAIM_CAUSE' as column_name, 
+        claim_cause_has_difference as has_difference
+    
+    from calculated
+
+    
+        
+    union all 
+
+    
+
+    
+    
+    select 
+        'LOSS_AMOUNT' as column_name, 
+        loss_amount_has_difference as has_difference
+    
+    from calculated
+
+    
+        
+    union all 
+
+    
+
+    
+    
+    select 
+        'IS_OPEN' as column_name, 
+        is_open_has_difference as has_difference
+    
+    from calculated
+/* {"app": "dbt", "dbt_version": "2026.3.11+76f3b13", "profile_name": "user", "target_name": "default", "node_id": "model.insurance_dbt.stg_claims", "invocation_id": "848f54f8-901d-4c95-9c73-e7cbb95f9d8c", "dbt_cloud_project_id": "70403103993789", "dbt_cloud_environment_id": "70403104008967", "dbt_cloud_job_id": "70403104384044", "dbt_cloud_run_id": "70403199504981"} */
+2026-03-22 23:32:40.440866 (Thread-2 (worker)): 23:32:40  Snowflake adapter: Snowflake query id: 01c33544-060b-49c2-0004-7d8332124216
+2026-03-22 23:32:40.441595 (Thread-2 (worker)): 23:32:40  Snowflake adapter: Snowflake error: 000904 (42000): SQL compilation error: error line 4 at position 39
+invalid identifier '"claim_id"'
+2026-03-22 23:32:40.442216 (Thread-2 (worker)): 23:32:40  [31mInternal error executing [0m
+Database Error
+  000904 (42000): SQL compilation error: error line 4 at position 39
+  invalid identifier '"claim_id"'
+
+This is an error in dbt. Please try again. If the error persists, open an issue at https://github.com/dbt-labs/dbt-core
+2026-03-22 23:32:40.449035 (Thread-2 (worker)): 23:32:40  compare_and_classify_query_results columns as string: {"column_names": ["CLAIM_ID", "POLICY_ID", "REPORT_DATE", "INCIDENT_DATE", "CLAIM_STATUS", "CLAIM_CAUSE", "LOSS_AMOUNT", "IS_OPEN"], "datatype_changes": {}}
+2026-03-22 23:32:40.451215 (Thread-2 (worker)): 23:32:40  _generate_set_results columns: {'column_names': ['CLAIM_ID', 'POLICY_ID', 'REPORT_DATE', 'INCIDENT_DATE', 'CLAIM_STATUS', 'CLAIM_CAUSE', 'LOSS_AMOUNT', 'IS_OPEN'], 'datatype_changes': {}}
+2026-03-22 23:32:40.466614 (Thread-2 (worker)): 23:32:40  Using snowflake connection "model.insurance_dbt.stg_claims"
+2026-03-22 23:32:40.467326 (Thread-2 (worker)): 23:32:40  On model.insurance_dbt.stg_claims: with 
+
+    
+    
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+    
+    a as (
+        select 
+            
+    "CLAIM_ID", "POLICY_ID", "REPORT_DATE", "INCIDENT_DATE", "CLAIM_STATUS", "CLAIM_CAUSE", "LOSS_AMOUNT", "IS_OPEN",
+            md5(cast(coalesce(cast("claim_id" as TEXT), '_dbt_dbt_compare_macros_surrogate_key_null_') as TEXT)) as dbt_audit_surrogate_key,
+            row_number() over (partition by dbt_audit_surrogate_key order by dbt_audit_surrogate_key ) as dbt_audit_pk_row_num,
+            hash("CLAIM_ID", "POLICY_ID", "REPORT_DATE", "INCIDENT_DATE", "CLAIM_STATUS", "CLAIM_CAUSE", "LOSS_AMOUNT", "IS_OPEN", dbt_audit_pk_row_num) as dbt_audit_row_hash
+        from (select * from ANALYTICS_KB_SAO.kb_staging_insurance.stg_claims)
+        
+    
+
+    ),
+
+    b as (
+        select 
+            
+    "CLAIM_ID", "POLICY_ID", "REPORT_DATE", "INCIDENT_DATE", "CLAIM_STATUS", "CLAIM_CAUSE", "LOSS_AMOUNT", "IS_OPEN",
+            md5(cast(coalesce(cast("claim_id" as TEXT), '_dbt_dbt_compare_macros_surrogate_key_null_') as TEXT)) as dbt_audit_surrogate_key,
+            row_number() over (partition by dbt_audit_surrogate_key order by dbt_audit_surrogate_key ) as dbt_audit_pk_row_num,
+            hash("CLAIM_ID", "POLICY_ID", "REPORT_DATE", "INCIDENT_DATE", "CLAIM_STATUS", "CLAIM_CAUSE", "LOSS_AMOUNT", "IS_OPEN", dbt_audit_pk_row_num) as dbt_audit_row_hash
+        from (select * from ANALYTICS_KB_SAO.dbt_cloud_pr_70403104384044_13.stg_claims)
+        
+    
+
+    ),
+
+    a_intersect_b as (
+
+        select * from a
+        where a.dbt_audit_row_hash in (select b.dbt_audit_row_hash from b)
+
+    ),
+
+    a_except_b as (
+
+        select * from a
+        where a.dbt_audit_row_hash not in (select b.dbt_audit_row_hash from b)
+
+    ),
+
+    b_except_a as (
+
+        select * from b
+        where b.dbt_audit_row_hash not in (select a.dbt_audit_row_hash from a)
+
+    )
+
+    
+    ,
+
+    all_records as (
+
+        select
+            *,
+            true as dbt_audit_in_a,
+            true as dbt_audit_in_b
+        from a_intersect_b
+
+        union all
+
+        select
+            *,
+            true as dbt_audit_in_a,
+            false as dbt_audit_in_b
+        from a_except_b
+
+        union all
+
+        select
+            *,
+            false as dbt_audit_in_a,
+            true as dbt_audit_in_b
+        from b_except_a
+
+    ),
+
+    classified as (
+        select 
+            *,
+            case 
+        when max(dbt_audit_pk_row_num) over (partition by dbt_audit_surrogate_key) > 1 then 'nonunique_pk'
+        when dbt_audit_in_a and dbt_audit_in_b then 'identical'
+        when boolor_agg(dbt_audit_in_a) over (partition by dbt_audit_surrogate_key, dbt_audit_pk_row_num) 
+            and boolor_agg(dbt_audit_in_b) over (partition by dbt_audit_surrogate_key, dbt_audit_pk_row_num)
+            then 'modified'
+        when dbt_audit_in_a then 'removed'
+        when dbt_audit_in_b then 'added'
+    end
+ as dbt_audit_row_status
+        from all_records
+    ),
+
+    final as (
+        select 
+            *,
+            count(distinct dbt_audit_surrogate_key, dbt_audit_pk_row_num) over (partition by dbt_audit_row_status)
+ as dbt_audit_num_rows_in_status,
+            -- using dense_rank so that modified rows (which have a full row for both the left and right side) both get picked up in the sample. 
+            -- For every other type this is equivalent to a row_number()
+            dense_rank() over (partition by dbt_audit_row_status order by dbt_audit_surrogate_key, dbt_audit_pk_row_num) as dbt_audit_sample_number
+        from classified
+    )
+
+    select * from final
+    
+        where dbt_audit_sample_number <= 20
+    
+    order by dbt_audit_row_status, dbt_audit_sample_number
