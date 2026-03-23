@@ -5,8 +5,10 @@ logs/
 .venv/
 *.duckdb
 *.duckdb.wal
-
+venv/
 
 dbt_internal_packages/
 .DS_Store
 *.DS_Store
+.env
+/project_review
