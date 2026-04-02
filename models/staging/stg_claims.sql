@@ -10,7 +10,7 @@ typed as (
     -- normalize multi-word statuses to snake_case
     regexp_replace(lower(trim(claim_status)), '[\\s-]+', '_') as claim_status,
     initcap(trim(claim_cause)) as claim_cause,
-    cast(loss_amount as decimal(18,2)) as loss_amount,
+    cast(loss_amount as decimal(18,2)) * 2 as loss_amount,
     case
       when regexp_replace(lower(trim(claim_status)), '[\\s-]+', '_') in ('closed','canceled') then false
       else true
