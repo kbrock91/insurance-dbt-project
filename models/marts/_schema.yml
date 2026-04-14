@@ -3,44 +3,63 @@ version: 2
 models:
   - name: dim_date
     description: Date dimension covering 2020-01-01 through 2025-12-31. Used to join time-based facts to a standard calendar spine.
+    time_spine:
+      standard_granularity_column: date_day
     columns:
       - name: date_day
         description: A single calendar date. Primary key of this dimension.
+        granularity: day
         tests:
           - unique
           - not_null
 
   - name: dim_agency
     description: One row per insurance agency. Represents the distribution channel through which policies are sold.
+    semantic_model:
+      enabled: true
     columns:
       - name: agency_id
         description: Unique identifier for the agency. Primary key.
         tests:
           - unique
           - not_null
+        entity:
+          type: primary
+          name: agency
       - name: agency_name
         description: The display name of the agency.
         tests:
           - not_null
+        dimension:
+          type: categorical
       - name: region
         description: Geographic region the agency operates in.
         tests:
           - not_null
+        dimension:
+          type: categorical
       - name: email
         description: Primary contact email address for the agency.
       - name: phone
         description: Primary contact phone number for the agency.
       - name: channel_type
         description: The distribution channel type for the agency (e.g. direct, broker, digital).
+        dimension:
+          type: categorical
 
   - name: dim_policyholder
     description: One row per policyholder. Represents the individual customers who hold insurance policies.
+    semantic_model:
+      enabled: true
     columns:
       - name: policyholder_id
         description: Unique identifier for the policyholder. Primary key.
         tests:
           - unique
           - not_null
+        entity:
+          type: primary
+          name: policyholder
       - name: first_name
         description: Policyholder's first name.
         tests:
@@ -53,63 +72,97 @@ models:
         description: Policyholder's date of birth.
       - name: gender
         description: Policyholder's gender.
+        dimension:
+          type: categorical
       - name: address
         description: Street address of the policyholder.
       - name: city
         description: City of the policyholder's address.
+        dimension:
+          type: categorical
       - name: state
         description: State of the policyholder's address.
+        dimension:
+          type: categorical
       - name: zip
         description: ZIP code of the policyholder's address.
 
   - name: dim_product
     description: One row per insurance product. Represents the catalog of insurance products that can be attached to a policy.
+    semantic_model:
+      enabled: true
     columns:
       - name: product_id
         description: Unique identifier for the product. Primary key.
         tests:
           - unique
           - not_null
+        entity:
+          type: primary
+          name: product
       - name: product_name
         description: Display name of the insurance product.
         tests:
           - not_null
+        dimension:
+          type: categorical
       - name: coverage_type
         description: The type of coverage the product provides (e.g. liability, comprehensive, collision).
         tests:
           - not_null
+        dimension:
+          type: categorical
 
   - name: dim_vehicle
     description: One row per vehicle covered under a policy. Identified by VIN.
+    semantic_model:
+      enabled: true
     columns:
       - name: vehicle_vin
         description: Vehicle Identification Number. Primary key.
         tests:
           - unique
           - not_null
+        entity:
+          type: primary
+          name: vehicle
       - name: make
         description: Manufacturer of the vehicle (e.g. Toyota, Ford).
         tests:
           - not_null
+        dimension:
+          type: categorical
       - name: model
         description: Model name of the vehicle (e.g. Camry, F-150).
         tests:
           - not_null
+        dimension:
+          type: categorical
       - name: year
         description: Model year of the vehicle.
         tests:
           - not_null
+        dimension:
+          type: categorical
+          name: model_year
       - name: vehicle_type
         description: Body style classification of the vehicle (e.g. Sedan, SUV, Truck, Coupe, Hatchback).
+        dimension:
+          type: categorical
 
   - name: dim_policy
     description: One row per insurance policy. Links policyholders, agencies, products, and vehicles together with policy terms and status.
+    semantic_model:
+      enabled: true
     columns:
       - name: policy_id
         description: Unique surrogate identifier for the policy. Primary key.
         tests:
           - unique
           - not_null
+        entity:
+          type: primary
+          name: policy
       - name: policy_number
         description: Business-facing unique policy number.
         tests:
@@ -119,18 +172,30 @@ models:
         description: Foreign key to dim_policyholder.
         tests:
           - not_null
+        entity:
+          type: foreign
+          name: policyholder
       - name: agency_id
         description: Foreign key to dim_agency. Identifies the agency that sold the policy.
         tests:
           - not_null
+        entity:
+          type: foreign
+          name: agency
       - name: product_id
         description: Foreign key to dim_product. Identifies the insurance product on the policy.
         tests:
           - not_null
+        entity:
+          type: foreign
+          name: product
       - name: vehicle_vin
         description: Foreign key to dim_vehicle. Identifies the vehicle covered by the policy.
         tests:
           - not_null
+        entity:
+          type: foreign
+          name: vehicle
       - name: start_date
         description: Date the policy coverage begins.
         tests:
@@ -141,37 +206,60 @@ models:
         description: Current status of the policy (e.g. active, expired, cancelled).
         tests:
           - not_null
+        dimension:
+          type: categorical
 
   - name: fct_claims
     description: One row per insurance claim. Contains claim financials and status, joined to policies.
+    semantic_model:
+      enabled: true
+    agg_time_dimension: report_date
     columns:
-      - name: claim_id
+      - name: claim_key
         description: Unique identifier for the claim. Primary key.
         tests:
           - unique
           - not_null
+        entity:
+          type: primary
+          name: claim
       - name: policy_id
         description: Foreign key to dim_policy. Identifies the policy the claim was filed against.
         tests:
           - not_null
+        entity:
+          type: foreign
+          name: policy
       - name: report_date
         description: Date the claim was reported.
         tests:
           - not_null
+        granularity: day
+        dimension:
+          type: time
       - name: incident_date
         description: Date the incident that triggered the claim occurred.
         tests:
           - not_null
+        granularity: day
+        dimension:
+          type: time
       - name: claim_status
         description: Current status of the claim (e.g. new, open, under_review, in_progress, closed, canceled, cancelled).
         tests:
           - not_null
+        dimension:
+          type: categorical
       - name: is_open
         description: Boolean flag used to identify whether a claim is open or closed. True if the claim is still active, false if resolved.
+        dimension:
+          type: categorical
       - name: claim_cause
         description: The cause or category of the claim (e.g. collision, theft, weather).
         tests:
           - not_null
+        dimension:
+          type: categorical
       - name: loss_amount
         description: The total dollar amount of the loss reported on the claim.
         tests:
@@ -180,18 +268,71 @@ models:
         description: The total amount paid out against the claim across all payout transactions.
       - name: outstanding_amount
         description: The remaining unpaid balance on the claim, calculated as loss_amount minus total_payout_amount.
+    metrics:
+      - name: claim_count
+        type: simple
+        label: Claim Count
+        description: Total number of claims filed.
+        agg: count
+        expr: 1
+      - name: open_claim_count
+        type: simple
+        label: Open Claim Count
+        description: Number of claims currently open.
+        agg: count
+        expr: 1
+        filter: |
+          {{ Dimension('claim__is_open') }} = true
+      - name: total_loss_amount
+        type: simple
+        label: Total Loss Amount
+        description: Sum of all reported loss amounts.
+        agg: sum
+        expr: loss_amount
+      - name: total_payout_amount
+        type: simple
+        label: Total Payout Amount
+        description: Sum of all amounts paid out on claims.
+        agg: sum
+        expr: total_payout_amount
+      - name: total_outstanding_amount
+        type: simple
+        label: Total Outstanding Amount
+        description: Sum of remaining unpaid balances across all claims.
+        agg: sum
+        expr: outstanding_amount
+      - name: avg_loss_amount
+        type: simple
+        label: Avg Loss Amount
+        description: Average reported loss amount per claim.
+        agg: average
+        expr: loss_amount
 
   - name: fct_premiums
     description: One row per premium transaction per policy. Contains gross and net premium amounts with fees and discounts applied.
+    semantic_model:
+      enabled: true
+    agg_time_dimension: effective_date
+    derived_semantics:
+      entities:
+        - name: premium
+          type: primary
+          expr: "policy_id || '-' || effective_date::varchar"
     columns:
       - name: policy_id
         description: Foreign key to dim_policy. Identifies the policy this premium transaction belongs to.
         tests:
           - not_null
+        entity:
+          type: foreign
+          name: policy
       - name: effective_date
         description: The date this premium transaction takes effect.
         tests:
           - not_null
+        granularity: day
+        dimension:
+          type: time
       - name: gross_premium_amount
         description: The full premium amount before fees and discounts are applied.
         tests:
@@ -204,3 +345,34 @@ models:
         description: The final premium amount after fees and discounts have been applied.
         tests:
           - not_null
+    metrics:
+      - name: premium_transaction_count
+        type: simple
+        label: Premium Transaction Count
+        description: Total number of premium transactions.
+        agg: count
+        expr: 1
+      - name: total_gross_premium
+        type: simple
+        label: Total Gross Premium
+        description: Sum of gross premium amounts before fees and discounts.
+        agg: sum
+        expr: gross_premium_amount
+      - name: total_net_premium
+        type: simple
+        label: Total Net Premium
+        description: Sum of net premium amounts after fees and discounts.
+        agg: sum
+        expr: net_premium_amount
+      - name: total_fees
+        type: simple
+        label: Total Fees
+        description: Sum of all fees applied to premiums.
+        agg: sum
+        expr: fees
+      - name: total_discounts
+        type: simple
+        label: Total Discounts
+        description: Sum of all discounts applied to premiums.
+        agg: sum
+        expr: discounts

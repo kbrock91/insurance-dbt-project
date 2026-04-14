@@ -16,8 +16,11 @@ models:
   - name: stg_policies
   - name: stg_vehicles
   - name: stg_claims
+    description: One row per insurance claim. Contains claim financials and status, joined to policies.
     config:
       group: claims
+      meta:
+        error_message: "Claim status must be one of the following: open, closed, new, under_review, in_progress, canceled"
     columns:
       - name: claim_status
         data_tests:
@@ -28,7 +31,7 @@ models:
                 severity: warn
                 meta: 
                   error_message: "Claim status must be one of the following: open, closed, new, under_review, in_progress, canceled"
-      - name: claim_id
+      - name: claim_key
         data_tests:
           - unique
           - not_null

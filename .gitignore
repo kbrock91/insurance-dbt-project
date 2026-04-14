@@ -12,3 +12,4 @@ dbt_internal_packages/
 *.DS_Store
 .env
 /project_review
+.claude/

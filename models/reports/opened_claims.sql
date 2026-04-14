@@ -1,6 +1,6 @@
 with recent_open_claims as (
   select
-    claim_id,
+    claim_key,
     policy_id,
     report_date,
     incident_date,

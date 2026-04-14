@@ -8,7 +8,7 @@ payouts as (
 ),
 joined as (
   select
-    c.claim_id,
+    c.claim_key,
     c.policy_id,
     c.report_date,
     c.incident_date,
@@ -19,7 +19,7 @@ joined as (
     coalesce(p.total_payout_amount, 0) as total_payout_amount,
      coalesce(c.loss_amount, 0) - coalesce(p.total_payout_amount, 0) as outstanding_amount
   from claims c
-  left join payouts p on c.claim_id = p.claim_id
+  left join payouts p on c.claim_key = p.claim_id
 )
 select * from joined
 
