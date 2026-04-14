@@ -14,10 +14,10 @@ select
         when mod(abs(hash(row_num * 5)),  100) < 45 then 'closed'        -- 45%
         when mod(abs(hash(row_num * 5)),  100) < 65 then 'open'          -- 20%
         when mod(abs(hash(row_num * 5)),  100) < 80 then 'in_progress'   -- 15%
-        when mod(abs(hash(row_num * 5)),  100) < 90 then 'under_review'  -- 10%
-        when mod(abs(hash(row_num * 5)),  100) < 95 then 'new'           --  6%
-        when mod(abs(hash(row_num * 5)),  100) < 97 then 'canceled'     --  2%
-        else                                              'cancelled'    --  2%
+        when mod(abs(hash(row_num * 5)),  100) < 90 then 'cancelled'  -- 10%
+        when mod(abs(hash(row_num * 5)),  100) < 95 then 'canceled'           --  6%
+        when mod(abs(hash(row_num * 5)),  100) < 97 then 'new'     --  2%
+        else                                              'under_review'    --  2%
     end as claim_status,
 
     -- Realistic claim cause distribution (collision most common)
