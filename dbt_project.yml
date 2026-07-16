@@ -32,3 +32,6 @@ sources:
     warn_after:
       count: 9999
       period: day
+      
+tests:
+  +static_analysis: strict 
