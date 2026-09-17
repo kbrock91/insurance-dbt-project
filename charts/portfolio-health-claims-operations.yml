@@ -1,0 +1,146 @@
+title: Portfolio Health & Claims Operations
+source: zna
+queries:
+  in_force_policies:
+    notes: Current count of policies marked active in the policy dimension.
+    sql: |
+      SELECT COUNT(*) AS active_policy_count
+      FROM DBT_KBROCK.DIM_POLICY
+      WHERE LOWER(POLICY_STATUS) = 'active'
+
+  premium_snapshot:
+    notes: Returns total net premium from the available premium records.
+    sql: |
+      SELECT SUM(NET_PREMIUM_AMOUNT) AS net_premium
+      FROM DBT_KBROCK.FCT_PREMIUMS
+
+  claims_snapshot:
+    notes: Returns total reported loss and the current unresolved claims workload.
+    sql: |
+      SELECT
+        SUM(LOSS_AMOUNT) AS reported_loss,
+        COUNT_IF(LOWER(CLAIM_STATUS) NOT IN ('closed', 'cancelled', 'canceled')) AS open_claim_count
+      FROM DBT_KBROCK.CLAIMS
+
+  monthly_policy_premium:
+    notes: Returns monthly policy and net premium production based on premium effective dates.
+    sql: |
+      SELECT
+        DATE_TRUNC('month', EFFECTIVE_DATE) AS month,
+        COUNT(DISTINCT POLICY_ID) AS policies_written,
+        SUM(NET_PREMIUM_AMOUNT) AS net_premium
+      FROM DBT_KBROCK.FCT_PREMIUMS
+      GROUP BY 1
+      ORDER BY 1
+
+  claims_by_cause:
+    notes: Returns reported loss and claim count by claim cause.
+    sql: |
+      SELECT
+        CLAIM_CAUSE AS claim_cause,
+        COUNT(*) AS claim_count,
+        SUM(LOSS_AMOUNT) AS reported_loss
+      FROM DBT_KBROCK.CLAIMS
+      GROUP BY 1
+      ORDER BY reported_loss DESC
+
+  open_claim_queue:
+    notes: Returns unresolved claims ordered by largest reported loss for operations review.
+    sql: |
+      SELECT
+        CLAIM_KEY AS claim_id,
+        CLAIM_STATUS AS status,
+        CLAIM_CAUSE AS cause,
+        REPORT_DATE AS reported_date,
+        LOSS_AMOUNT AS reported_loss
+      FROM DBT_KBROCK.CLAIMS
+      WHERE LOWER(CLAIM_STATUS) NOT IN ('closed', 'cancelled', 'canceled')
+      ORDER BY LOSS_AMOUNT DESC, REPORT_DATE ASC
+
+charts:
+  active_policies:
+    notes: Shows the current active policy count as the portfolio scale indicator.
+    query: in_force_policies
+    type: kpi
+    label: Active Policies
+    value: active_policy_count
+    style:
+      value:
+        format: integer
+
+  net_premium:
+    notes: Shows cumulative net premium from the available premium records.
+    query: premium_snapshot
+    type: kpi
+    label: Net Premium
+    value: net_premium
+    style:
+      value:
+        format: currency_whole
+
+  reported_loss:
+    notes: Shows total reported loss across claims.
+    query: claims_snapshot
+    type: kpi
+    label: Reported Loss
+    value: reported_loss
+    style:
+      value:
+        format: currency_whole
+
+  open_claims:
+    notes: Shows claims still requiring operational attention.
+    query: claims_snapshot
+    type: kpi
+    label: Open Claims
+    value: open_claim_count
+    style:
+      value:
+        format: integer
+
+  monthly_premium_trend:
+    notes: Shows monthly net premium production and the number of policies written.
+    query: monthly_policy_premium
+    type: line
+    title: Net Premium by Effective Month
+    x: month
+    y: net_premium
+    support_table:
+      - source: policies_written
+        label: Policies Written
+        format: integer
+    style:
+      number_format: currency_whole
+      time_format: '%b %Y'
+
+  loss_by_cause:
+    notes: Ranks claim causes by reported loss to show the primary portfolio loss drivers.
+    query: claims_by_cause
+    type: bar
+    title: Reported Loss by Claim Cause
+    x: claim_cause
+    y: reported_loss
+    sort:
+      by: reported_loss
+      order: desc
+    style:
+      number_format: currency_whole
+
+  open_claims_queue:
+    notes: Lists unresolved claims by reported loss so claim operations can prioritize work.
+    query: open_claim_queue
+    type: table
+    title: Open Claims Queue
+    style:
+      columns:
+        reported_date:
+          label: Reported Date
+        reported_loss:
+          label: Reported Loss
+          format: currency_whole
+          align: right
+
+rows:
+  - cols: [active_policies, net_premium, reported_loss, open_claims]
+  - monthly_premium_trend
+  - cols: [loss_by_cause, open_claims_queue]
