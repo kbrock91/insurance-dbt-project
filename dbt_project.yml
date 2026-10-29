@@ -10,13 +10,19 @@ macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 test-paths: ["tests"]
 
+flags:
+  use_v2_parser: true
+
 models:
   insurance_dbt:
+    +state:
+      compare_unrendered_code: true
+      lag_tolerance: 5m
     +persist_docs:
       relation: true
       columns: true
     staging:
-      +materialized: view
+      +materialized: table
     marts:
       +materialized: table
     synthetic:

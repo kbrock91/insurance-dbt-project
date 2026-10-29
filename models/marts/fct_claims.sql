@@ -1,3 +1,10 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='claim_key'
+    )
+}}
+
 with claims as (
   select * from {{ ref('stg_claims') }}
 ),
@@ -15,9 +22,10 @@ joined as (
     c.claim_status,
     c.is_open,
     c.claim_cause,
-    coalesce(c.loss_amount, 0) as loss_amount,
+    coalesce(c.loss_amount, 1) as loss_amount,
     coalesce(p.total_payout_amount, 0) as total_payout_amount,
-     coalesce(c.loss_amount, 0) - coalesce(p.total_payout_amount, 0) as outstanding_amount
+     coalesce(c.loss_amount, 0) - coalesce(p.total_payout_amount, 0) as outstanding_amount, 
+     'new' as new
   from claims c
   left join payouts p on c.claim_key = p.claim_id
 )

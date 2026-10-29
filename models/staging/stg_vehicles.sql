@@ -6,7 +6,7 @@ renamed as (
     trim(vehicle_vin) as vehicle_vin,
     initcap(trim(make)) as make,
     initcap(trim(model)) as model,
-    cast(year as integer) as year,
+    cast(year as integer) * 2 as year,
     initcap(trim(vehicle_type)) as vehicle_type
   from source
 )

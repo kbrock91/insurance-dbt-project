@@ -11,7 +11,8 @@ joined as (
     p.vehicle_vin,
     p.start_date,
     p.end_date,
-    p.policy_status
+    p.policy_status, 
+    '{{invocation_id}}' as invoc_id_2
   from p
 )
 select * from joined

@@ -9,7 +9,7 @@ models:
       - name: date_day
         description: A single calendar date. Primary key of this dimension.
         granularity: day
-        tests:
+        data_tests:
           - unique
           - not_null
 
@@ -275,14 +275,7 @@ models:
         description: Total number of claims filed.
         agg: count
         expr: 1
-      - name: open_claim_count
-        type: simple
-        label: Open Claim Count
-        description: Number of claims currently open.
-        agg: count
-        expr: 1
-        filter: |
-          {{ Dimension('claim__is_open') }} = true
+
       - name: total_loss_amount
         type: simple
         label: Total Loss Amount
